@@ -1,6 +1,5 @@
 # RoboSoftEngr-BuildMyWorld
 
-Submission Folder
 Here are the files for the first project submission:
 
 - model folder:
