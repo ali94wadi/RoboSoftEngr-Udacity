@@ -1,33 +1,3 @@
-/*
- * Copyright (c) 2010, Willow Garage, Inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Willow Garage, Inc. nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
-// %Tag(FULLTEXT)%
 // %Tag(INCLUDES)%
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
@@ -63,7 +33,7 @@ uint32_t shape = visualization_msgs::Marker::CUBE;
   // Set the namespace and id for this marker.  This serves to create a unique ID
   // Any marker sent with the same namespace and id will overwrite the old one
 // %Tag(NS_ID)%
-  marker.ns = "markers";
+  marker.ns = "using_markers";
   marker.id = 0;
 // %EndTag(NS_ID)%
 
@@ -112,24 +82,45 @@ Pause 5 seconds
 Publish the marker at the drop off zone
 */
 int idx = 0;
-int num_points = 2;
-while (ros::ok() && idx < num_points){
-  marker.pose.position.x = target[idx][0];
-  marker.pose.position.y = target[idx][1];
-  marker.pose.position.z = 0.2;
-  marker.pose.orientation= tf::createQuaternionMsgFromYaw(target[idx][2]); 
-  if((idx+1)%2 == 1){
-    marker.action = visualization_msgs::Marker::ADD;
-    idx++;
-  }
-  else
-    marker.action = visualization_msgs::Marker::DELETE;
+// int num_points = 2;
+marker.action = visualization_msgs::Marker::ADD;
+marker.pose.position.x = target[idx][0];
+marker.pose.position.y = target[idx][1];
+marker.pose.position.z = 0.2;
+marker.pose.orientation= tf::createQuaternionMsgFromYaw(target[idx][2]); 
+ROS_INFO("PICKUP!");
+marker_pub.publish(marker);// Publish the marker
+ros::Duration(5.0).sleep();
+marker.action = visualization_msgs::Marker::DELETE;
+marker_pub.publish(marker);// Publish the marker
+ros::Duration(5.0).sleep();
+marker.action = visualization_msgs::Marker::ADD;
+idx++;
+marker.pose.position.x = target[idx][0];
+marker.pose.position.y = target[idx][1];
+marker.pose.position.z = 0.2;
+marker.pose.orientation= tf::createQuaternionMsgFromYaw(target[idx][2]); 
+ROS_INFO("DROPOFF!");
+marker_pub.publish(marker);// Publish the marker
+
+// while (ros::ok() && idx < num_points){
+//     ROS_INFO("LOOPING!");
+//   marker.pose.position.x = target[idx][0];
+//   marker.pose.position.y = target[idx][1];
+//   marker.pose.position.z = 0.2;
+//   marker.pose.orientation= tf::createQuaternionMsgFromYaw(target[idx][2]); 
+//   if(idx%2 == 0){
+//     marker.action = visualization_msgs::Marker::ADD;
+//     idx++;
+//   }
+//   else
+//     marker.action = visualization_msgs::Marker::DELETE;
   
-  marker_pub.publish(marker);// Publish the marker
-  ros::Duration(5.0).sleep();
-// %Tag(SLEEP_END)%
-    r.sleep();
-  }
+//   marker_pub.publish(marker);// Publish the marker
+//   ros::Duration(5.0).sleep();
+// // %Tag(SLEEP_END)%
+//     r.sleep();
+//   }
 // %EndTag(SLEEP_END)%
 }
 // %EndTag(FULLTEXT)%
